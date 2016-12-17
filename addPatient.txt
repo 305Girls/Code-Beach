@@ -4,24 +4,17 @@ create procedure addPatient
      @age int,
      @gender char(2),
      @phone varchar(11),
-     @dpmId varchar(4), 
+     @dpmId varchar(4),
      @dId varchar(10),
-     @appTime datetime,
      @qNumber int
      As
-     
-       Declare @id varchar(18)
-       set @id=null
-       select @id=pId from Patient where pId=@pId
-       IF(@id is null)
-       BEGIN
-       insert
-       into Patient
-       values(
-       @pId,@name,@age,@gender,@phone
-       )
-       END
-       insert into PatientHSP
-       values(@pId,@dpmId,@dId,@appTime,
-       @qNumber,null,0,0,0
-       )
+     insert
+     into Patient
+     values(
+     @pId,@name,@age,@gender,@phone
+     )
+     insert
+     into PatientHSP
+     values(@pId,@dpmId,@dId,null,
+     @qNumber,null,0,0,0
+     )
