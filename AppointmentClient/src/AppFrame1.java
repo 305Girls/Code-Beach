@@ -4,14 +4,25 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JButton;
 import javax.swing.DefaultComboBoxModel;
 
@@ -25,6 +36,11 @@ public class AppFrame1 extends JFrame {
     		lblNewLabel_3 = new JLabel("\u9884\u7EA6\u65F6\u95F4\uFF1A");
     private JComboBox comboBox = new JComboBox(),comboBox_1 = new JComboBox(),comboBox_2 = new JComboBox();
     private JButton btnNewButton = new JButton("\u786E\u5B9A"),btnNewButton_1 = new JButton("\u53D6\u6D88");
+    private final JLabel label = new JLabel("\u9884\u7EA6\u65E5\u671F\uFF1A");
+    private final JComboBox comboBox_3 = new JComboBox();
+    public JComboBox getComboBox_3() {
+		return comboBox_3;
+	}
 	public JComboBox getComboBox() {
 		return comboBox;
 	}
@@ -72,7 +88,7 @@ public class AppFrame1 extends JFrame {
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.columnWeights = new double[]{1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
@@ -86,6 +102,13 @@ public class AppFrame1 extends JFrame {
 		gbc_lblNewLabel.gridy = 0;
 		panel.add(lblNewLabel, gbc_lblNewLabel);
 		
+		GridBagConstraints gbc_comboBox_3 = new GridBagConstraints();
+		gbc_comboBox_3.insets = new Insets(0, 0, 5, 50);
+		gbc_comboBox_3.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBox_3.gridx = 2;
+		gbc_comboBox_3.gridy = 7;
+		panel.add(comboBox_3, gbc_comboBox_3);
+		
 		
 		lblNewLabel_1.setFont(new Font("等线", Font.PLAIN, 15));
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
@@ -94,7 +117,6 @@ public class AppFrame1 extends JFrame {
 		gbc_lblNewLabel_1.gridx = 1;
 		gbc_lblNewLabel_1.gridy = 5;
 		panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"", "\u5987\u79D1", "\u9AA8\u79D1", "\u513F\u79D1"}));
 		
 		
 		comboBox.setFont(new Font("等线", Font.PLAIN, 15));
@@ -113,7 +135,6 @@ public class AppFrame1 extends JFrame {
 		gbc_lblNewLabel_2.gridx = 1;
 		gbc_lblNewLabel_2.gridy = 6;
 		panel.add(lblNewLabel_2, gbc_lblNewLabel_2);
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"", "\u8D75\u4E09", "\u674E\u6B66", "\u9EC4\u864E", "\u738B\u98D2"}));
 		
 		
 		comboBox_1.setFont(new Font("等线", Font.PLAIN, 15));
@@ -124,13 +145,20 @@ public class AppFrame1 extends JFrame {
 		gbc_comboBox_1.gridy = 6;
 		panel.add(comboBox_1, gbc_comboBox_1);
 		
+		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.insets = new Insets(0, 150, 5, 5);
+		gbc_label.gridx = 1;
+		gbc_label.gridy = 7;
+		label.setFont(new Font("等线", Font.PLAIN, 15));
+		panel.add(label, gbc_label);
+		
 	
 		lblNewLabel_3.setFont(new Font("等线", Font.PLAIN, 15));
 		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
 		gbc_lblNewLabel_3.anchor = GridBagConstraints.EAST;
 		gbc_lblNewLabel_3.insets = new Insets(0, 150, 5, 5);
 		gbc_lblNewLabel_3.gridx = 1;
-		gbc_lblNewLabel_3.gridy = 7;
+		gbc_lblNewLabel_3.gridy = 8;
 		panel.add(lblNewLabel_3, gbc_lblNewLabel_3);
 		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"", "\u4E0A\u5348", "\u4E0B\u5348"}));
 		comboBox_2.setToolTipText("");
@@ -141,7 +169,7 @@ public class AppFrame1 extends JFrame {
 		gbc_comboBox_2.insets = new Insets(0, 0, 5, 50);
 		gbc_comboBox_2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBox_2.gridx = 2;
-		gbc_comboBox_2.gridy = 7;
+		gbc_comboBox_2.gridy = 8;
 		panel.add(comboBox_2, gbc_comboBox_2);
 		
 		
@@ -162,10 +190,22 @@ public class AppFrame1 extends JFrame {
 		panel.add(btnNewButton_1, gbc_btnNewButton_1);
 		
 
-		/*添加combobox选项
-		 * 		comboBox.addItem(item);
-		 *    	comboBox_1.addItem(item);
-		 * */
+		//添加comboBox选项
+		DBhandel a =new DBhandel();
+		String sql="select dpmName from Department";
+		a.addComboBox(comboBox,sql,"dpmName");
+		comboBox_3.addItem("");
+		Calendar c = Calendar.getInstance();
+		Date d=new Date();//取时间
+        c.setTime(d);
+        for(int i=0;i<3;i++){
+        c.add(c.DATE,1);//把日期往后增加一天.整数往后推,负数往前移动
+        d=c.getTime(); //这个时间就是日期往后推一天的结果        
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = formatter.format(d);  
+        comboBox_3.addItem(dateString);
+        }
 	}
-
+	
 }
+

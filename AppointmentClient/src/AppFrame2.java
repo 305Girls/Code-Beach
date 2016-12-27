@@ -202,7 +202,6 @@ public class AppFrame2 extends JFrame {
 		gbc_lblNewLabel_1.gridx = 1;
 		gbc_lblNewLabel_1.gridy = 7;
 		panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"", "\u5987\u79D1", "\u9AA8\u79D1", "\u513F\u79D1"}));
 		
 		
 		comboBox.setFont(new Font("等线", Font.PLAIN, 15));
@@ -221,7 +220,6 @@ public class AppFrame2 extends JFrame {
 		gbc_lblNewLabel_2.gridx = 1;
 		gbc_lblNewLabel_2.gridy = 8;
 		panel.add(lblNewLabel_2, gbc_lblNewLabel_2);
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"", "\u8D75\u4E09", "\u674E\u6B66", "\u9EC4\u864E", "\u738B\u98D2"}));
 		
 		
 		comboBox_1.setFont(new Font("等线", Font.PLAIN, 15));
@@ -270,10 +268,10 @@ public class AppFrame2 extends JFrame {
 		panel.add(btnNewButton_1, gbc_btnNewButton_1);
 		
 
-		/*添加combobox选项
-		 * 		comboBox.addItem(item);
-		 *    	comboBox_1.addItem(item);
-		 * */
+		//添加comboBox选项
+		DBhandel a =new DBhandel();
+		String sql="select dpmName from Department";
+		a.addComboBox(comboBox,sql,"dpmName");
 	}
 
 }
