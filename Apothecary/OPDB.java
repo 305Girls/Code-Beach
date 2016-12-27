@@ -15,7 +15,7 @@ public class OPDB {
 	
 	
 	String sql="";
-	public static boolean open() 
+	public static boolean open(String ip) 
 	{
 	 //打开连接
     try {
@@ -27,7 +27,7 @@ public class OPDB {
 	      }
     
     try {
-		con=DriverManager.getConnection("jdbc:sqlserver://Localhost; DatabaseName=HospitalDB","sa","sa");
+		con=DriverManager.getConnection("jdbc:sqlserver://"+ip+"; DatabaseName=HospitalDB","sa","sa");
 	} catch (SQLException e) {
 		// TODO Auto-generated catch blockd
 		e.printStackTrace();

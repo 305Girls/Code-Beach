@@ -13,26 +13,17 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class AllFrame {
-
+	public static String ip;
 	Socket server = null;
 	static String log_in;//登录信息
-	static String duty="2";
+	static String duty="3";
 	public AllFrame() throws SQLException{
 		
 		
 		LoginFrame lframe = new LoginFrame();
 		FuncFrame fframe=new FuncFrame();
 		
-		/*
-		mframe.getBtnNewButton().addActionListener(new ActionListener(){//“登陆”
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				mframe.dispose();
-				lframe.setVisible(true);
-			}
-		});
-		*/
+		
 		
 		lframe.setVisible(true);
 		lframe.getBtnNewButton().addActionListener(new ActionListener(){//“确认登陆”
@@ -42,7 +33,7 @@ public class AllFrame {
 			String id=lframe.getTextField().getText(),pwd=new String(lframe.getPasswordField().getPassword());
 				if(id!=""&&pwd!=""){
 					try {
-					server=new Socket("127.0.0.1", 4444);
+					server=new Socket("192.168.1.109", 4444);//127.0.0.1
 					PrintWriter os = new PrintWriter(server.getOutputStream());
 					BufferedReader is= new BufferedReader(new InputStreamReader(server.getInputStream()));
 					os.println(id);
@@ -55,9 +46,9 @@ public class AllFrame {
 					if(log_in.matches("succeed"))
 					{
 						JOptionPane.showMessageDialog(null,"登陆成功！正在连接数据库...",null, JOptionPane.PLAIN_MESSAGE); 
-						String ip=is.readLine();//接收数据库地址
+						ip=is.readLine();//接收数据库地址
 						//连接数据库
-						if(OPDB.open())
+						if(OPDB.open(ip))
 						{
 							JOptionPane.showMessageDialog(null, "数据库连接成功！");
 							//跳转界面
@@ -86,34 +77,17 @@ public class AllFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				Object[] options = { "是", "否" }; 
-				int i=JOptionPane.showOptionDialog(null, "确认取消？", "", 
+				int i=JOptionPane.showOptionDialog(null, "确认重置？", "", 
 				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, 
 				null, options, options[0]); 
 				if(i==JOptionPane.YES_OPTION){
-					lframe.dispose();
-					lframe.getTextField().setText("");lframe.getPasswordField().setText("");
-					//mframe.setVisible(true);
-				}
-			}
-		});
-		
-		fframe.getBtnNewButton().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0)  {
-				// TODO Auto-generated method stub
-				Object[] options = { "是", "否" }; 
-				int i=JOptionPane.showOptionDialog(null, "确认取消？", "", 
-				JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, 
-				null, options, options[0]); 
-				if(i==JOptionPane.YES_OPTION){
-					fframe.dispose();
+				
+					lframe.getTextField().setText("");
+					lframe.getPasswordField().setText("");
 					
-					//mframe.setVisible(true);
 				}
 			}
 		});
-		
-		
-
 		
 	}
 
