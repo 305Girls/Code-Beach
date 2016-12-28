@@ -10,6 +10,7 @@ public class Patient {
 	String gender;
 	String phone;
 	Timestamp appTime;
+	Timestamp qTime;
 	int qNumber;
 	String reld;
 	int isVisit;
@@ -130,6 +131,12 @@ public class Patient {
 	}
 	void setPhone(String phone) {
 		this.phone = phone;
+	}
+	Timestamp getqTime() {
+		return qTime;
+	}
+	void setqTime(Timestamp qTime) {
+		this.qTime = qTime;
 	}
 	
 }

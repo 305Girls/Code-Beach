@@ -25,6 +25,7 @@ public class Client_Doctor {
 	private JPasswordField pwd;
 	static Doctor doc=null;
 	static Patient patient=null;
+	static String address="192.168.1.109";
 
 	/**
 	 * Launch the application.
@@ -156,7 +157,7 @@ public class Client_Doctor {
 				
 				try {
 					
-					server=new Socket("127.0.0.1", 4444);
+					server=new Socket(address, 4444);
 					PrintWriter os = new PrintWriter(server.getOutputStream());
 					BufferedReader is= new BufferedReader(new InputStreamReader(server.getInputStream()));
 					os.println(id.getText());
@@ -171,7 +172,7 @@ public class Client_Doctor {
 						JOptionPane.showMessageDialog(null,log_in,"LOG_IN", JOptionPane.PLAIN_MESSAGE); 
 						String ip=is.readLine();//接收数据库地址
 						//连接数据库
-						if(OPDB.open())
+						if(OPDB.open(ip))
 						{
 							System.out.println("连接数据库成功！");
 							doc=new Doctor(id.getText());
@@ -316,7 +317,7 @@ public class Client_Doctor {
 						String timeNow=format.format(date);//当前系统时间
 						String sql="select B.name,A.pId,A.qNumber,A.isVisit,A.appTime,A.qTime "
 								+" from PatientHSP A,Patient B,Doctor C " 
-								+"where C.dId='1'and A.pId=B.pId and C.dId=A.dId "
+								+"where C.dId='"+id.getText()+"'and A.pId=B.pId and C.dId=A.dId "
 								+"and ( convert(varchar(10),A.appTime,120) = '"+timeNow+"' "
 								+"or (convert(varchar(10),A.qTime,120) = '"+timeNow+"' and A.appTime is null)) "
 								+"order by qNumber";
@@ -456,7 +457,7 @@ public class Client_Doctor {
 						String timeNow=format.format(date);//当前系统时间
 						String sql="select B.name,A.pId,A.qNumber,A.isVisit,A.appTime,A.qTime "
 								+" from PatientHSP A,Patient B,Doctor C " 
-								+"where C.dId='1'and A.pId=B.pId and C.dId=A.dId "
+								+"where C.dId='"+id.getText()+"'and A.pId=B.pId and C.dId=A.dId "
 								+"and ( convert(varchar(10),A.appTime,120) = '"+timeNow+"' "
 								+"or (convert(varchar(10),A.qTime,120) = '"+timeNow+"' and A.appTime is null)) "
 								+"order by qNumber asc";
@@ -584,7 +585,7 @@ public class Client_Doctor {
 				         		long hour=(l/(60*60*1000)-day*24);
 				         		long min=((l/(60*1000))-day*24*60-hour*60);
 				         		long s=(l/1000-day*24*60*60-hour*60*60-min*60);
-								if((hour*3600+min*60+s)<=3600)
+								if((day*24*3600+hour*3600+min*60+s)<=3600)
 									dt.addRow(v);
 							}	
 							table_1.setModel(dt);
@@ -693,7 +694,7 @@ public class Client_Doctor {
 					         		long hour=(l/(60*60*1000)-day*24);
 					         		long min=((l/(60*1000))-day*24*60-hour*60);
 					         		long s=(l/1000-day*24*60*60-hour*60*60-min*60);
-									if((hour*3600+min*60+s)<=3600)
+									if((day*24*3600+hour*3600+min*60+s)<=3600)
 										dt.addRow(v);
 								}	
 								table_1.setModel(dt);
@@ -878,13 +879,11 @@ public class Client_Doctor {
 								l.addColumn("数量");
 								String sql1="select B.meName,C.meNumber from PatientHSP A,Medicine B,recipeMe C "
 						               +"where A.pId='"+textField.getText()+"' and A.dId='"+doc.getdId()
-									   +"' and (convert(varchar(10),A.appTime,120)='"+textField_1.getText()+"' "
-									   		+ "or convert(varchar(10),A.qTime,120)='"+textField_1.getText()+"' )"
+									   +"' and convert(varchar(10),C.reTime,120)='"+textField_1.getText()+"' "
 									   +"and A.reId=C.reId and B.meId=C.meId ";
 								String sql2="select B.feName from PatientHSP A,FeeItem B,recipeFe C "
 							               +"where A.pId='"+textField.getText()+"' and A.dId='"+doc.getdId()
-										   +"' and (convert(varchar(10),A.appTime,120)='"+textField_1.getText()+"' "
-										   + "or convert(varchar(10),A.qTime,120)='"+textField_1.getText()+"' )"
+										   +"' and convert(varchar(10),C.reTime,120)='"+textField_1.getText()+"' "
 										   +"and A.reId=C.reId and B.feId=C.feId ";
 								rs=OPDB.excuteSelect(sql1);
 								while(rs.next())
@@ -939,9 +938,29 @@ public class Client_Doctor {
 					public void actionPerformed(ActionEvent e) {
 						if(patient!=null)
 						{
-							CureP cP=new CureP(patient);
-							Thread thread=new Thread(cP);
-							thread.start();
+							if(!textField.getText().equals(""))
+							{
+								try {
+									String sql="select * from PatientHSP A,Patient B "
+											+ "where A.pId='"+textField.getText()+"' "
+													+ "and A.pId=B.pId ";
+									ResultSet rs=OPDB.excuteSelect(sql);
+									if(rs.next())
+									{
+										patient.setName(rs.getString("name"));
+										patient.setpId(rs.getString("pId"));
+										
+									}
+									CureP cP=new CureP(patient);
+									Thread thread=new Thread(cP);
+									thread.start();
+								
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
+							
 						}
 					}
 				});

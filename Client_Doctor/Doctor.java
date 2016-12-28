@@ -33,7 +33,7 @@ public class Doctor extends Account
 	    		+ "where dId='"+dId+"'";
 		String sql2="select B.name,A.pId,A.qNumber,A.isVisit,A.appTime,A.qTime "
 				+" from PatientHSP A,Patient B,Doctor C " 
-				+"where C.dId='1'and A.pId=B.pId and C.dId=A.dId "
+				+"where C.dId='"+dId+"'and A.pId=B.pId and C.dId=A.dId "
 				+"and ( convert(varchar(10),A.appTime,120) = '"+timeNow+"' "
 				+"or (convert(varchar(10),A.qTime,120) = '"+timeNow+"' and A.appTime is null)) "
 				+"order by qNumber";

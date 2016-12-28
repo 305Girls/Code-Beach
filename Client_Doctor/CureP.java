@@ -5,7 +5,10 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 
 
@@ -311,23 +314,28 @@ public class CureP extends JFrame implements Runnable{
 			public void actionPerformed(ActionEvent e) {
 				int row1=table.getRowCount();
 				int row2=table_1.getRowCount();
-				Timestamp nowdate = new Timestamp(System.currentTimeMillis());
+		        Date date=new Date(System.currentTimeMillis()); 
+				DateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String timeNow=format.format(date);//当前系统时间
 				DefaultTableModel model1 = (DefaultTableModel) table.getModel();//获取defaulttablemodel
 				DefaultTableModel model2 = (DefaultTableModel) table_1.getModel();//获取defaulttablemodel
 				exi = JOptionPane.showConfirmDialog (null, "确认开处方？", "友情提示", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-	            if (exi == JOptionPane.YES_OPTION)
+				System.out.println(Timestamp.valueOf(timeNow));
+				if (exi == JOptionPane.YES_OPTION)
 	            {
+					String[] content1=new String[row1];
+					int[] content2=new int[row1];
+					String[] content3=new String[row2];
 	            	for(int i=0;i<row1;i++)
 					{
-							String content1=(String) model1.getValueAt(i,0);
-							String content2=(String) model1.getValueAt(i,1);
-							OPDB.curePatient(patient, Client_Doctor.doc,content1,Integer.parseInt(content2),null,nowdate);
+							content1[i]=(String) model1.getValueAt(i,0);
+							content2[i]=Integer.valueOf((String)model1.getValueAt(i,1));
 					}
 					for(int i=0;i<row2;i++)
 					{
-							String content1=(String) model2.getValueAt(i,0);
-							OPDB.curePatient(patient, Client_Doctor.doc,null,0,content1,nowdate);
+							content3[i]=(String) model2.getValueAt(i,0);	
 					}
+					OPDB.curePatient(patient, Client_Doctor.doc,content1,content2,content3,Timestamp.valueOf(timeNow));
 					CureP.this.dispose();
 	            }
 				
